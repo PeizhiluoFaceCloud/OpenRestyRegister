@@ -254,15 +254,23 @@ function do_register(jreq)
         return false,ackJson["ret"]
     end
     
-    --把用户信息写入到数据库中
-    local qr_code = get_random()    --随机产生一个二维码
+    
+    local user_key = "project:"..jreq["DDIP"]["Body"]["Project"]..":user:"..jreq["DDIP"]["Body"]["PhoneNumber"]
+    --如果存在老的二维码(用户重复注册)，先把原来的删掉
+    local qr_code_old, err = red_handler:hget(user_key,"QRCode")
+    if qr_code_old then
+        qr_code_old_key = "project:"..jreq["DDIP"]["Body"]["Project"]..":qrcode:"..qr_code_old
+        red_handler:del(qr_code_old_key)
+	end
+    --随机产生一个二维码，写入数据库
+    local qr_code = get_random()    
     local qr_code_key = "project:"..jreq["DDIP"]["Body"]["Project"]..":qrcode:"..qr_code
     local ok, err = red_handler:set(qr_code_key,jreq["DDIP"]["Body"]["PhoneNumber"])
     if not ok then
         ngx.log(ngx.ERR, "set qr_code to redis failed", err)
         return false,"set qr_code to redis failed"
     end
-    local user_key = "project:"..jreq["DDIP"]["Body"]["Project"]..":user:"..jreq["DDIP"]["Body"]["PhoneNumber"]
+    --把用户信息写入到数据库中
     local ok, err = red_handler:hmset(user_key,
                                     "QRCode",qr_code,
                                     "RegisterPicture",jreq["DDIP"]["Body"]["Picture"],
@@ -276,7 +284,7 @@ function do_register(jreq)
         ngx.log(ngx.ERR, "hmset userinfo to redis failed", err)
         return false,"hmset userinfo to redis failed"
     end
-
+    
     --返回应答数据
 	local jrsp = {}
 	jrsp["DDIP"] = {}

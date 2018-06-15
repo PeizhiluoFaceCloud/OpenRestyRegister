@@ -175,12 +175,14 @@ function do_register(jreq)
         or not jreq["DDIP"]["Body"]["Picture"]
         or not jreq["DDIP"]["Body"]["Name"]
         or not jreq["DDIP"]["Body"]["Email"]
+        or not jreq["DDIP"]["Body"]["Other"]
 		or type(jreq["DDIP"]["Body"]["Project"]) ~= "string"
         or type(jreq["DDIP"]["Body"]["PhoneNumber"]) ~= "string"
         or type(jreq["DDIP"]["Body"]["AuthCode"]) ~= "string"
         or type(jreq["DDIP"]["Body"]["Picture"]) ~= "string"
         or type(jreq["DDIP"]["Body"]["Name"]) ~= "string"
         or type(jreq["DDIP"]["Body"]["Email"]) ~= "string"
+        or type(jreq["DDIP"]["Body"]["Other"]) ~= "string"
 		then
 	    ngx.log(ngx.ERR, "do_register invalid args")
 	    return false,"do_register invalid args"
@@ -276,6 +278,7 @@ function do_register(jreq)
                                     "RegisterPicture",jreq["DDIP"]["Body"]["Picture"],
                                     "Name",jreq["DDIP"]["Body"]["Name"],
                                     "Email",jreq["DDIP"]["Body"]["Email"],
+                                    "Other",jreq["DDIP"]["Body"]["Other"],
                                     "Status",current_status,
                                     "RegisterTime",ngx.utctime(),
                                     "CheckTime","0000-00-00 00:00:00",

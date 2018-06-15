@@ -255,8 +255,7 @@ function do_register(jreq)
         ngx.log(ngx.ERR, "operate failed:",ackJson["ret"])
         return false,ackJson["ret"]
     end
-    
-    
+
     local user_key = "project:"..jreq["DDIP"]["Body"]["Project"]..":user:"..jreq["DDIP"]["Body"]["PhoneNumber"]
     --如果存在老的二维码(用户重复注册)，先把原来的删掉
     local qr_code_old, err = red_handler:hget(user_key,"QRCode")
@@ -280,7 +279,7 @@ function do_register(jreq)
                                     "Email",jreq["DDIP"]["Body"]["Email"],
                                     "Other",jreq["DDIP"]["Body"]["Other"],
                                     "Status",current_status,
-                                    "RegisterTime",ngx.localtime(),
+                                    "RegisterTime",ngx.utctime(),
                                     "CheckTime","0000-00-00 00:00:00",
                                     "CheckPicture","0")
     if not ok then

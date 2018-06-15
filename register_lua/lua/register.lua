@@ -280,7 +280,7 @@ function do_register(jreq)
                                     "Email",jreq["DDIP"]["Body"]["Email"],
                                     "Other",jreq["DDIP"]["Body"]["Other"],
                                     "Status",current_status,
-                                    "RegisterTime",ngx.utctime(),
+                                    "RegisterTime",ngx.localtime(),
                                     "CheckTime","0000-00-00 00:00:00",
                                     "CheckPicture","0")
     if not ok then
